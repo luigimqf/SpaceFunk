@@ -1,0 +1,24 @@
+{
+  "name": "spacefunky",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon ./src/main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@discordjs/opus": "^0.9.0",
+    "commandkit": "^0.1.1",
+    "discord-player": "^6.6.4",
+    "discord.js": "^14.13.0",
+    "dotenv": "^16.3.1",
+    "ffmpeg-static": "^5.2.0",
+    "genius-lyrics": "^4.4.6",
+    "nodemon": "^3.0.1",
+    "youtube-ext": "^1.1.14"
+  }
+}
