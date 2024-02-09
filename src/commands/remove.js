@@ -2,12 +2,12 @@ const { useQueue } = require("discord-player");
 const { EmbedBuilder, ApplicationCommandOptionType } = require("discord.js");
 
 const data = {
-  name: "skipto",
-  description: "Pula para a música desejada!",
+  name: "remove",
+  description: "Remove uma música da fila!",
   options: [
     {
       name: "song",
-      description: "O nome/url da música que você deseja pular",
+      description: "O nome/url da música que você deseja remover",
       type: ApplicationCommandOptionType.String,
       required: false,
     },
@@ -34,21 +34,21 @@ async function run({ interaction, client }) {
     return interaction.reply({content:"Você precisa especificar o número ou nome da música!", epheremal: true});
 
   if (track) {
-    const track_skipTo = queue.tracks
+    const track_to_remove = queue.tracks
       .toArray()
       .find(
         (x) => x.title.toLowerCase() === track.toLowerCase() || x.url === track
       );
-    if (!track_skipTo)
+    if (!track_to_remove)
       return interaction.reply("Não encontrei essa música na fila!");
 
-    queue.node.skipTo(track_skipTo);
+    queue.removeTrack(track_to_remove);
     embed
       .setAuthor({
-        name: "Música pulada",
+        name: "Música removida",
         iconURL: client.user.displayAvatarURL(),
       })
-      .setDescription(`⏭️ Tocando agora: ${track_skipTo.title}`)
+      .setDescription(`⏭️ Música removida: **${track_to_remove.title}**`)
       .setColor("#8e44ad")
       .setFooter({
         text: `Comando executado por ${interaction.user.tag}`,
@@ -70,13 +70,13 @@ async function run({ interaction, client }) {
     if (!indexTrack.title)
       return interaction.reply("Não encontrei essa música na fila!");
 
-    queue.node.skipTo(indexTrack);
+    queue.removeTrack(indexTrack);
     embed
       .setAuthor({
-        name: "Música pulada",
+        name: "Música removida",
         iconURL: client.user.displayAvatarURL(),
       })
-      .setDescription(`⏭️ Tocando agora: **${indexTrack.title}**`)
+      .setDescription(`⏭️ Música removida: **${indexTrack.title}**`)
       .setColor("#8e44ad")
       .setFooter({
         text: `Comando executado por ${interaction.user.tag}`,
@@ -84,6 +84,7 @@ async function run({ interaction, client }) {
       })
       .setTimestamp()
       .toJSON();
+
     return interaction.reply({
       embeds: [embed],
     });
