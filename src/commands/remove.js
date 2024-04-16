@@ -31,7 +31,7 @@ async function run({ interaction, client }) {
   const number = interaction.options.getNumber("number");
 
   if (!track && !number)
-    return interaction.reply({content:"Você precisa especificar o número ou nome da música!", epheremal: true});
+    return interaction.reply({content:"Você precisa especificar a posição na fila ou nome da música!", epheremal: true});
 
   if (track) {
     const track_to_remove = queue.tracks
