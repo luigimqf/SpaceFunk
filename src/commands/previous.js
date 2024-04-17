@@ -2,7 +2,7 @@ const { useQueue } = require("discord-player");
 const { EmbedBuilder } = require("discord.js");
 
 const data = {
-  name: "back",
+  name: "previous",
   description: "Volta para a música anterior",
 }
 
