@@ -21,7 +21,6 @@ async function run ({interaction,client}) {
     .setAuthor({name: success ? 'Música pulada!' : '❌ Não foi possível pular a música!',iconURL:client.user.displayAvatarURL()})
     .setColor(success ? '#8e44ad' : '#ff0000').setDescription(success ? `⏭️ Indo para a música: **${nextTrack.title}**` : '')
     .setFooter({text: `Comando executado por ${interaction.user.tag}`,iconURL: interaction.user.displayAvatarURL()}).setTimestamp().toJSON();
-    ;
 
   return interaction.reply({embeds: [embed]});
 }
