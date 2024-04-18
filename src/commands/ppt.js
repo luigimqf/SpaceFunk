@@ -7,19 +7,19 @@ const {
 } = require("discord.js");
 
 const choices = [
-  { name: "Pedra", emoji: "🗿" },
-  { name: "Papel", emoji: "📄" },
-  { name: "Tesoura", emoji: "✂️" },
+  { name: "Rock", emoji: "🗿" },
+  { name: "Paper", emoji: "📄" },
+  { name: "Scissor", emoji: "✂️" },
 ];
 
 const data = {
   name: "ppt",
-  description: "Chame um player para um x1 de pedra, papel e tesoura!",
+  description: "Play rock, paper, scissor with someone!",
   dm_permission: false,
   options: [
     {
       name: "user",
-      description: "Usuário pro x1",
+      description: "User to play X1!",
       type: ApplicationCommandOptionType.User,
       required: true,
     },
@@ -32,19 +32,19 @@ async function run({ interaction }) {
 
     if (interaction.user.id === targetUser.id)
       return interaction.reply({
-        content: "Deve ser triste a vida de quem quer jogar sozinho...",
+        content: "Must be sad being this much alone...",
         ephemeral: true,
       });
 
     if (targetUser.bot)
       return interaction.reply({
-        content: "Você não pode jogar com bots!",
+        content: "You can't play with a bot!",
         ephemeral: true,
       });
 
     const embed = new EmbedBuilder()
-      .setTitle("Pedra, papel e tesoura!")
-      .setDescription(`Sua vez, ${targetUser}!`)
+      .setTitle("Rock, Paper and Scissors")
+      .setDescription(`Your turn, ${targetUser}!`)
       .setColor("#8e44ad")
       .setTimestamp(new Date());
 
@@ -59,7 +59,7 @@ async function run({ interaction }) {
     const actionRow = new ActionRowBuilder().addComponents(buttons);
 
     const reply = await interaction.reply({
-      content: `${interaction.user} te convocou para um x1 de pedra, papel e tesoura , ${targetUser}!`,
+      content: `${interaction.user} invoked you to a rock, paper, scissor X1 , ${targetUser}!`,
       embeds: [embed],
       components: [actionRow],
     });
@@ -70,7 +70,7 @@ async function run({ interaction }) {
         time: 30000,
       })
       .catch(async (error) => {
-        embed.setDescription(`GG! ${targetUser} não respondeu a tempo!`);
+        embed.setDescription(`GG! ${targetUser} didn't answer in time!`);
         await reply.edit({ embeds: [embed], components: [] });
         return;
       });
@@ -82,11 +82,11 @@ async function run({ interaction }) {
     });
 
     await targetInteraction.reply({
-      content: `Você escolheu ${targetChoice.emoji}!`,
+      content: `You chose ${targetChoice.emoji}!`,
       ephemeral: true,
     });
 
-    embed.setDescription(`${interaction.user}, sua vez!`);
+    embed.setDescription(`${interaction.user}, your turn!`);
 
     await reply.edit({ embeds: [embed] });
 
@@ -96,7 +96,7 @@ async function run({ interaction }) {
         time: 30000,
       })
       .catch(async (error) => {
-        embed.setDescription(`GG! ${interaction.user} não respondeu a tempo!`);
+        embed.setDescription(`GG! ${interaction.user} didn't answer in time!`);
         await reply.edit({ embeds: [embed], components: [] });
         return;
       });
@@ -108,39 +108,39 @@ async function run({ interaction }) {
     });
 
     await initialUserInteraction.reply({
-      content: `Você escolheu ${targetChoice.emoji}!`,
+      content: `You chose ${targetChoice.emoji}!`,
       ephemeral: true,
     });
 
     let result;
 
-    if (targetChoice.name === "Pedra" && initialUserChoice.name === "Tesoura") {
-      result = `${targetUser} venceu!`;
+    if (targetChoice.name === "Rock" && initialUserChoice.name === "Scissor") {
+      result = `${targetUser} won!`;
     }
 
-    if (targetChoice.name === "Tesoura" && initialUserChoice.name === "Papel") {
-      result = `${targetUser} venceu!`;
+    if (targetChoice.name === "Scissor" && initialUserChoice.name === "Paper") {
+      result = `${targetUser} won!`;
     }
-    if (targetChoice.name === "Papel" && initialUserChoice.name === "Pedra") {
-      result = `${targetUser} venceu!`;
+    if (targetChoice.name === "Paper" && initialUserChoice.name === "Rock") {
+      result = `${targetUser} won!`;
     }
-    if (initialUserChoice.name === "Pedra" && targetChoice.name === "Tesoura") {
-      result = `${targetUser} venceu!`;
+    if (initialUserChoice.name === "Rock" && targetChoice.name === "Scissor") {
+      result = `${targetUser} won!`;
     }
 
     if (initialUserChoice.name === "Tesoura" && targetChoice.name === "Papel") {
-      result = `${targetUser} venceu!`;
+      result = `${targetUser} won!`;
     }
     if (initialUserChoice.name === "Papel" && targetChoice.name === "Pedra") {
-      result = `${targetUser} venceu!`;
+      result = `${targetUser} won!`;
     }
 
     if (initialUserChoice.name === targetChoice.name) {
-      result = "Empate!";
+      result = "Draw!";
     }
 
     embed.setDescription(
-      `${targetUser} escolheu ${targetChoice.emoji}!\n${interaction.user} escolheu ${initialUserChoice.emoji}!\n\n${result}`
+      `${targetUser} chose ${targetChoice.emoji}!\n${interaction.user} chose ${initialUserChoice.emoji}!\n\n${result}`
     );
 
     await reply.edit({ embeds: [embed], components: [] });

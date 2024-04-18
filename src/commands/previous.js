@@ -10,17 +10,19 @@ async function run({ interaction, client }) {
 
   const queue = useQueue(interaction.guildId);
 
-  if(!queue || !queue.isPlaying()) return interaction.reply({ content: "Não estou tocando nada no momento", ephemeral: true});
+  if (!queue || !queue.isPlaying()) {
+    return interaction.reply({content: "I'm not playing anything!", ephemeral: true });
+  }
 
-  if(!queue.history.previousTrack) return interaction.reply({ content: "Não há músicas anteriores", ephemeral: true });
+  if(!queue.history.previousTrack) return interaction.reply({ content: "There's no music history", ephemeral: true });
 
   await queue.history.back();
 
   const embed = new EmbedBuilder()
-    .setAuthor({name:"Voltando para a música anterior",iconURL:client.user.displayAvatarURL()})
+    .setAuthor({name:"Going back to the previous music",iconURL:client.user.displayAvatarURL()})
     .setColor("#8e44ad")
-    .setDescription(`⏮️ Voltando para a música **${queue.currentTrack.title}**`)
-    .setFooter({text: `Comando executado por ${interaction.user.tag}`,iconURL: interaction.user.displayAvatarURL()}).setTimestamp().toJSON();
+    .setDescription(`⏮️ Previous music **${queue.currentTrack.title}**`)
+    .setFooter({text: `Command executed by ${interaction.user.tag}`,iconURL: interaction.user.displayAvatarURL()}).setTimestamp().toJSON();
 
   interaction.reply({ embeds: [embed] });
 }

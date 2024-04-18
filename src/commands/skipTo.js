@@ -3,17 +3,17 @@ const { EmbedBuilder, ApplicationCommandOptionType } = require("discord.js");
 
 const data = {
   name: "skipto",
-  description: "Pula para a música desejada!",
+  description: "Skip to a specific music in the queue!",
   options: [
     {
       name: "song",
-      description: "O nome/url da música que você deseja pular",
+      description: "Music name or URL to skip to!",
       type: ApplicationCommandOptionType.String,
       required: false,
     },
     {
       name: "number",
-      description: "A posição da música na fila",
+      description: "Music position in the queue to skip to!",
       type: ApplicationCommandOptionType.Number,
       required: false,
     },
@@ -24,14 +24,17 @@ async function run({ interaction, client }) {
   const queue = useQueue(interaction.guild);
   const embed = new EmbedBuilder();
 
-  if (!queue || !queue.isPlaying())
-    return interaction.reply({content: "Não estou tocando nada no momento!", epheremal: true});
+  if (!queue || !queue.isPlaying()) {
+    return interaction.reply({content: "I'm not playing anything!", ephemeral: true });
+  }
 
   const track = interaction.options.getString("song");
   const number = interaction.options.getNumber("number");
 
   if (!track && !number)
-    return interaction.reply({content:"Você precisa especificar o número ou nome da música!", epheremal: true});
+    return interaction.reply({content:"You need to specify a music name or position in the queue!", epheremal: true});
+
+  if(!queue.tracks.toArray()[0]) return interaction.reply({ content: "There's no music in the queue", ephemeral: true });
 
   if (track) {
     const track_skipTo = queue.tracks
@@ -40,18 +43,18 @@ async function run({ interaction, client }) {
         (x) => x.title.toLowerCase() === track.toLowerCase() || x.url === track
       );
     if (!track_skipTo)
-      return interaction.reply("Não encontrei essa música na fila!");
+      return interaction.reply({content: "Music not found!", ephemeral: true});
 
     queue.node.skipTo(track_skipTo);
     embed
       .setAuthor({
-        name: "Música pulada",
+        name: "Music skipped!",
         iconURL: client.user.displayAvatarURL(),
       })
-      .setDescription(`⏭️ Tocando agora: ${track_skipTo.title}`)
+      .setDescription(`⏭️ Playing now: ${track_skipTo.title}`)
       .setColor("#8e44ad")
       .setFooter({
-        text: `Comando executado por ${interaction.user.tag}`,
+        text: `Command executed by ${interaction.user.tag}`,
         iconURL: interaction.user.displayAvatarURL(),
       })
       .setTimestamp()
