@@ -1,5 +1,6 @@
-const { useQueue } = require("discord-player");
 const { ButtonBuilder, ButtonStyle, EmbedBuilder } = require("discord.js");
+const { useQueue } = require("discord-player");
+const shuffleArray = require("../../utils/shuffleArray");
 
 async function action({ interaction, client, reply, rows }) {
   const queue = useQueue(interaction.guild);
@@ -11,21 +12,19 @@ async function action({ interaction, client, reply, rows }) {
     });
   }
 
-  const nextTrack = queue.tracks.toArray()[0];
-
-  if (!nextTrack)
+  if (!queue.tracks.toArray()[0])
     return interaction.reply({
-      content: "There's no music in the queue",
+      content: "There's no music in the queue!",
       ephemeral: true,
     });
 
-  queue.node.skip();
+  const shuffledTracks = shuffleArray(queue.tracks.toArray());
 
-  const copiedQueue = { ...queue };
-  const copiedTracks = [...copiedQueue.tracks.toArray()];
-  const nextCurrentTrack = copiedTracks.shift();
+  queue.clear();
 
-  const tracks = copiedTracks.map(
+  shuffledTracks.map((track) => queue.addTrack(track));
+
+  const tracks = shuffledTracks.map(
     (track, index) =>
       `**${index + 1}**. **[${track.title}](${track.url}) | [${track.author}](${
         track.url
@@ -33,9 +32,9 @@ async function action({ interaction, client, reply, rows }) {
   );
 
   const nextSongs =
-    copiedQueue.tracks.size > 10
-      ? `and **${copiedQueue.tracks.size - 1 - 10}** music(s)...`
-      : `**${copiedQueue.tracks.size - 1}** in playlist...`;
+    queue.size > 10
+      ? `and **${queue.tracks.size - 10}** music(s)...`
+      : `**${queue.tracks.size}** in playlist...`;
 
   const embed = new EmbedBuilder()
     .setColor("#8e44ad")
@@ -44,8 +43,8 @@ async function action({ interaction, client, reply, rows }) {
       iconURL: client.user.displayAvatarURL({ size: 1024, dynamic: true }),
     })
     .setDescription(
-      `▶️ Playing: **[${nextCurrentTrack.title}](${
-        nextCurrentTrack.url
+      `▶️ Playing: **[${queue.currentTrack.title}](${
+        queue.currentTrack.url
       })**\n\n${tracks.slice(0, 10).join("\n")}\n\n${nextSongs}`
     )
     .setFooter({
@@ -59,11 +58,10 @@ async function action({ interaction, client, reply, rows }) {
 
   return interaction.deferUpdate();
 }
-
 const button = new ButtonBuilder()
-  .setCustomId("skip")
-  .setLabel("Skip")
-  .setStyle(ButtonStyle.Primary)
-  .setEmoji("1230581263983837254");
+  .setCustomId("shuffle")
+  .setLabel("Shuffle Queue")
+  .setStyle(ButtonStyle.Success)
+  .setEmoji("1230583261021999145");
 
-module.exports = { action, button, key: "skip" };
+module.exports = { action, button, key: "shuffle" };

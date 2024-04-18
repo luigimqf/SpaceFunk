@@ -1,18 +1,18 @@
 const { ButtonBuilder, ButtonStyle } = require("discord.js");
 const { useQueue } = require("discord-player");
 
-async function action({ interaction}) {
+async function action({ interaction, client, reply, rows }) {
   const queue = useQueue(interaction.guild);
 
-  if (!queue || !queue.node.isPlaying()) {
-    return interaction.reply("I'm not playing anything!", { ephemeral: true });
+  if (!queue || !queue.isPlaying()) {
+    return interaction.reply({content: "I'm not playing anything!", ephemeral: true });
   }
 
-  const success = queue.delete();
+  queue.delete();
 
   return interaction.reply(
     { 
-      content: success ? "🌀 Queue eliminada!" : "❌ Falha ao eliminar a queue" ,
+      content:"🌀 Queue eliminated!",
       ephemeral: true,
     }
   );
@@ -20,6 +20,7 @@ async function action({ interaction}) {
 const button = new ButtonBuilder()
   .setCustomId("stop")
   .setLabel("Stop")
-  .setStyle(ButtonStyle.Primary);
+  .setStyle(ButtonStyle.Danger)
+  .setEmoji("1230581199718580324")
 
 module.exports = { action, button, key: "stop"};

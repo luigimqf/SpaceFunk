@@ -2,40 +2,31 @@ const { useQueue } = require("discord-player");
 const {
   EmbedBuilder,
 } = require("discord.js");
-
-const buttonActions = [
-  { name: "back", emoji: "⬅️" },
-  { name: "foward", emoji: "➡️" },
-];
+const createQueueButton = require("../utils/createQueueButtons");
 
 const data = {
   name: "queue",
-  description: "Mostra a queue de músicas",
+  description: "Show music queue!",
 };
 
 async function run({ interaction, client }) {
   const queue = useQueue(interaction.guildId);
 
-  if (!queue || !queue.isPlaying())
-    return interaction.reply({
-      content: "Não estou tocando nada no momento!",
-      epheremal: true,
-    });
+  if (!queue || !queue.isPlaying()) {
+    return interaction.reply({content: "I'm not playing anything!", ephemeral: true });
+  }
 
   if (!queue.tracks.toArray()[0])
     return interaction.reply({
-      content: "Não há músicas na queue",
+      content: "There's no music in the queue!",
       epheremal: true,
     });
-
-  let queueStart = 0;
-  let queueEnd = 10;
 
   const songs = queue.tracks.size;
   const nextSongs =
     songs > 10
-      ? `E **${songs - 10}** música(s)...`
-      : `**${songs}** na playlist...`;
+      ? `and **${songs - 10}** music(s)...`
+      : `**${songs}** in playlist...`;
 
   const tracks = queue.tracks
     .toArray()
@@ -48,16 +39,7 @@ async function run({ interaction, client }) {
         }\``
     );
 
-  // const buttons = buttonActions.map((choice) => {
-  //   return new ButtonBuilder()
-  //     .setCustomId(choice.name)
-  //     .setStyle(ButtonStyle.Primary)
-  //     .setEmoji(choice.emoji);
-  // });
-
-  // const actionRow = new ActionRowBuilder().addComponents(buttons);
-
-  const progress = queue.node.createProgressBar(queue.currentTrack.duration);
+  const {rows, buttons} = createQueueButton();
 
   const embed = new EmbedBuilder()
     .setColor("#8e44ad")
@@ -66,64 +48,29 @@ async function run({ interaction, client }) {
       iconURL: client.user.displayAvatarURL({ size: 1024, dynamic: true }),
     })
     .setDescription(
-      `▶️ Tocando: **[${queue.currentTrack.title}](${
+      `▶️ Playing: **[${queue.currentTrack.title}](${
         queue.currentTrack.url
-      })**\n\n${progress}\n\n${tracks.slice(queueStart, queueEnd).join("\n")}\n\n${nextSongs}`
+      })**\n\n${tracks.slice(0, 10).join("\n")}\n\n${nextSongs}`
     )
     .setFooter({
-      text: `Comando executado por ${interaction.user.tag}`,
+      text: `Command executed by ${interaction.user.tag}`,
       iconURL: interaction.user.displayAvatarURL(),
     })
     .setTimestamp()
     .toJSON();
 
-  const reply = await interaction.reply({ embeds: [embed]});
+  const reply = await interaction.reply({ embeds: [embed], components: rows});
 
-  // const userInteraction = await reply.awaitMessageComponent({
-  //   filter: (i) => i.user.id === interaction.user.id,
-  // });
+  const collector = reply.createMessageComponentCollector();
 
-  // if (!userInteraction) return;
+  collector.on("collect", async (i) => {
+    const button = buttons.find((button) => button.key === i.customId);
 
-  // const userChoice = buttonActions.find((choice) => {
-  //   return choice.name === userInteraction.customId;
-  // });
+    if (!button) return i.reply({ content: "Button not implemented!", ephemeral: true });
 
-  // switch (userChoice.name) {
-  //   case 'back':
-  //     if(queueStart === 0) return;
-  //     queueStart -= 10;
-  //     queueEnd -= 10;
-  //     break;
+    await button.action({ interaction: i,client, reply, rows});
+  });
 
-  //   case 'foward':
-  //     if(queueEnd === queue.tracks.size) return;
-  //     queueStart += 10;
-  //     queueEnd += 10;
-  // }
-
-  // const newQueueEmbed = new EmbedBuilder()
-  // .setAuthor({
-  //   name: `Server queue - ${interaction.guild.name}`,
-  //   iconURL: client.user.displayAvatarURL({ size: 1024, dynamic: true }),
-  // })
-  // .setDescription(
-  //   `▶️ Tocando: **[${queue.currentTrack.title}](${
-  //     queue.currentTrack.url
-  //   })**\n\n${tracks.slice(queueStart, queueEnd).join("\n")}\n\n${nextSongs}`
-  // )
-  // .setColor("#8e44ad")
-  // .setFooter({
-  //   text: `Comando executado por ${interaction.user.tag}`,
-  //   iconURL: interaction.user.displayAvatarURL(),
-  // })
-  // .setTimestamp()
-  // .toJSON();
-
-  // await reply.edit({
-  //   embeds: [newQueueEmbed],
-  //   components: [actionRow],
-  // })
 }
 
 module.exports = { data, run };
