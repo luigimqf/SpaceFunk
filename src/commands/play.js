@@ -1,12 +1,16 @@
 const { useMainPlayer } = require("discord-player");
-const { EmbedBuilder, Application, ApplicationCommandOptionType } = require("discord.js");
+const {
+  EmbedBuilder,
+  Application,
+  ApplicationCommandOptionType,
+} = require("discord.js");
 
 const data = {
   name: "play",
   description: "Play a song!",
   options: [
     {
-      name: "url",
+      name: "query",
       description: "Nome ou Link da música",
       type: ApplicationCommandOptionType.String,
       required: true,
@@ -33,19 +37,21 @@ async function run({ interaction, client }) {
       requestedBy: interaction.user,
     });
 
-    if(track.playlist) {
+    if (track.playlist) {
       embed
-      .setAuthor({
-        name: `Playlist adicionada à queue!`,
-        iconURL: client.user.displayAvatarURL(),
-      })
-      .setDescription(`▶️ Adicionado à queue: **${track.playlist.tracks.length} músicas** `)
-      .setFooter({
-        text: `Comando executado por ${interaction.user.tag}`,
-        iconURL: interaction.user.displayAvatarURL(),
-      })
-      .setTimestamp()
-      .toJSON();
+        .setAuthor({
+          name: `Playlist adicionada à queue!`,
+          iconURL: client.user.displayAvatarURL(),
+        })
+        .setDescription(
+          `▶️ Adicionado à queue: **${track.playlist.tracks.length} músicas** `
+        )
+        .setFooter({
+          text: `Comando executado por ${interaction.user.tag}`,
+          iconURL: interaction.user.displayAvatarURL(),
+        })
+        .setTimestamp()
+        .toJSON();
       await reply.edit({ embeds: [embed] });
       return;
     }
@@ -63,10 +69,10 @@ async function run({ interaction, client }) {
       })
       .setTimestamp()
       .toJSON();
+      
     await reply.edit({ embeds: [embed] });
     return;
   } catch (error) {
-    console.log(error);
     embed
       .setAuthor({
         name: `Erro ao tocar a música!`,

@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: spacefunk-deployment
-        image: dancastroofc/spacefunk:v1
+        image: dancastroofc/spacefunk:v2
         env:
         - name: CLIENT_ID
           valueFrom:
