@@ -10,6 +10,8 @@ async function action({ interaction }) {
 
   queue.delete();
 
+  interaction.message.delete();
+
   return interaction.reply(
     { 
       content:"🌀 Queue eliminated!",
