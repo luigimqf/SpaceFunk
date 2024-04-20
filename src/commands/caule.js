@@ -1,6 +1,6 @@
 const data = {
   name: 'caule',
-  description: 'Mostra o caule do dia!',
+  description: 'Show the caule!',
 }
 
 async function run ({interaction,client}) {

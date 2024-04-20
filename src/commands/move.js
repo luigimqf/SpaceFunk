@@ -3,17 +3,17 @@ const { ApplicationCommandOptionType, EmbedBuilder } = require("discord.js");
 
 const data = {
   name: "move",
-  description: "Move uma música na fila",
+  description: "Move a song in the queue to a new position!",
   options: [
     {
       name: "song",
-      description: "Posição da música na fila",
+      description: "Music number in the queue to move",
       type: ApplicationCommandOptionType.Number,
       required: true,
     },
     {
       name: "position",
-      description: "Nova posição da música na fila",
+      description: "New position in the queue for the music",
       type: ApplicationCommandOptionType.Number,
       required: true,
     }
@@ -23,15 +23,13 @@ const data = {
 async function run({ interaction, client }) {
   const queue = useQueue(interaction.guildId);
 
-  if (!queue || !queue.isPlaying())
-    return interaction.reply({
-      content: "Não estou tocando nada no momento!",
-      epheremal: true,
-    });
+  if (!queue || !queue.isPlaying()) {
+    return interaction.reply({content: "I'm not playing anything!", ephemeral: true });
+  }
 
   if (!queue.tracks.toArray()[0])
     return interaction.reply({
-      content: "Não há músicas na queue",
+      content: "There's no music in the queue!",
       epheremal: true,
     });
 
@@ -39,7 +37,7 @@ async function run({ interaction, client }) {
 
   if (!song)
     return interaction.reply({
-      content: "Não encontrei essa música na queue",
+      content: "Music not found in the queue!",
       epheremal: true,
     });
 
@@ -47,18 +45,18 @@ async function run({ interaction, client }) {
 
   if (newPosition < 1 || newPosition > queue.tracks.length)
     return interaction.reply({
-      content: "Posição inválida",
+      content: "Invalid position!",
       epheremal: true,
     });
 
   queue.moveTrack(song, newPosition - 1);
 
   const embed = new EmbedBuilder()
-    .setAuthor({name: 'Posições alteradas',iconURL:client.user.displayAvatarURL()})
-    .setDescription(`Música **${song.title}** movida para a posição **${newPosition}**`)
+    .setAuthor({name: 'Positions switched',iconURL:client.user.displayAvatarURL()})
+    .setDescription(`Music **${song.title}** moved to positon **${newPosition}**`)
     .setThumbnail(song.thumbnail)
     .setColor('#8e44ad')
-    .setFooter({text: `Comando executado por ${interaction.user.tag}`,iconURL: interaction.user.displayAvatarURL()}).setTimestamp().toJSON();
+    .setFooter({text: `Command executed by ${interaction.user.tag}`,iconURL: interaction.user.displayAvatarURL()}).setTimestamp().toJSON();
 
   return interaction.reply({embeds: [embed]});
 }

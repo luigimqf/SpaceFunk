@@ -2,32 +2,34 @@ const { useQueue } = require("discord-player");
 const { EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require("discord.js");
 
 const choices = [
-  { name: "QUEUE", emoji: "🎶", description: "Loop setado em queue" },
-  { name: "TRACK", emoji: "🎵", description: "Loop setado em track" },
-  { name: "AUTOPLAY", emoji: "▶️", description: "Loop setado em autoplay" },
+  { name: "QUEUE", emoji: "🎶", description: "Loop set in queue" },
+  { name: "TRACK", emoji: "🎵", description: "Loop set in track" },
+  { name: "AUTOPLAY", emoji: "▶️", description: "Loop set in auto" },
   { name: "OFF", emoji: "🔇", description: "Loop off" },
 ];
 
 const data = {
   name: "loop",
-  description: "Habilita ou desabilita o loop da música ou a queue.",
+  description: "Enable or disable loop!",
 };
 
 async function run({ interaction }) {
   const queue = useQueue(interaction.guild);
 
-  if(!queue || !queue.isPlaying()) return interaction.reply({content: "Não estou tocando nada no momento!", epheremal: true});
+  if (!queue || !queue.isPlaying()) {
+    return interaction.reply({content: "I'm not playing anything!", ephemeral: true });
+  }
 
   const embed = new EmbedBuilder()
-  .setAuthor({name: "Confirmação de loop",iconURL: interaction.client.user.displayAvatarURL()})
+  .setAuthor({name: "Loop confirmation",iconURL: interaction.client.user.displayAvatarURL()})
   .setDescription(`
-    1. Loop em queue: ${choices[0].emoji}\n
-    2. Loop da track: ${choices[1].emoji}\n
+    1. Loop in queue: ${choices[0].emoji}\n
+    2. Loop in track: ${choices[1].emoji}\n
     3. Autoplay: ${choices[2].emoji}\n
     4. Off: ${choices[3].emoji}\n
   `)
   .setColor("#8e44ad")
-  .setFooter({text: `Comando executado por ${interaction.user.tag}`,iconURL: interaction.user.displayAvatarURL()}).setTimestamp().toJSON();
+  .setFooter({text: `Command executed by ${interaction.user.tag}`,iconURL: interaction.user.displayAvatarURL()}).setTimestamp().toJSON();
 
   const buttons = choices.map((choice) => {
     return new ButtonBuilder()
@@ -71,7 +73,7 @@ async function run({ interaction }) {
   const successEmbed = new EmbedBuilder()
   .setAuthor({name: `${userChoice.description}`,iconURL: interaction.client.user.displayAvatarURL()})
   .setColor("#8e44ad")
-  .setFooter({text: `Comando executado por ${interaction.user.tag}`,iconURL: interaction.user.displayAvatarURL()}).setTimestamp().toJSON();
+  .setFooter({text: `Command executed by ${interaction.user.tag}`,iconURL: interaction.user.displayAvatarURL()}).setTimestamp().toJSON();
 
   await reply.edit({
     content: '',

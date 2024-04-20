@@ -11,7 +11,7 @@ const data = {
   options: [
     {
       name: "query",
-      description: "Nome ou Link da música",
+      description: "Music URL or search query",
       type: ApplicationCommandOptionType.String,
       required: true,
     },
@@ -22,12 +22,13 @@ async function run({ interaction, client }) {
   const player = useMainPlayer();
 
   const channel = interaction.member.voice.channel;
-  if (!channel) return interaction.reply("Você não está em um canal de voz!");
+
+  if (!channel) return interaction.reply({content: "Try joining a voice channel first!", ephemeral: true});
 
   const query = interaction.options.getString("url", true);
 
   const embed = new EmbedBuilder()
-    .setAuthor({ name: "Carregando música..." })
+    .setAuthor({ name: "Loading music(s)..." })
     .setColor("#8e44ad");
 
   const reply = await interaction.reply({ embeds: [embed] });
@@ -40,14 +41,14 @@ async function run({ interaction, client }) {
     if (track.playlist) {
       embed
         .setAuthor({
-          name: `Playlist adicionada à queue!`,
+          name: `Playlist added to queue!`,
           iconURL: client.user.displayAvatarURL(),
         })
         .setDescription(
-          `▶️ Adicionado à queue: **${track.playlist.tracks.length} músicas** `
+          `▶️ Added to queue: **${track.playlist.tracks.length} musics** `
         )
         .setFooter({
-          text: `Comando executado por ${interaction.user.tag}`,
+          text: `Command executed by ${interaction.user.tag}`,
           iconURL: interaction.user.displayAvatarURL(),
         })
         .setTimestamp()
@@ -58,13 +59,13 @@ async function run({ interaction, client }) {
 
     embed
       .setAuthor({
-        name: `Música adicionada à queue!`,
+        name: `Music added to queue!`,
         iconURL: client.user.displayAvatarURL(),
       })
       .setThumbnail(track.thumbnail)
-      .setDescription(`▶️  Adicionado à queue: **${track.title}** `)
+      .setDescription(`▶️  Added to queue: **${track.title}**`)
       .setFooter({
-        text: `Comando executado por ${interaction.user.tag}`,
+        text: `Command executed by ${interaction.user.tag}`,
         iconURL: interaction.user.displayAvatarURL(),
       })
       .setTimestamp()
@@ -75,12 +76,12 @@ async function run({ interaction, client }) {
   } catch (error) {
     embed
       .setAuthor({
-        name: `Erro ao tocar a música!`,
+        name: `Failed to play music!`,
         iconURL: client.user.displayAvatarURL(),
       })
-      .setDescription(`❌ Ocorreu um erro ao tocar a música!`)
+      .setDescription(`❌ An error occurred`)
       .setFooter({
-        text: `Comando executado por ${interaction.user.tag}`,
+        text: `Command executed by ${interaction.user.tag}`,
         iconURL: interaction.user.displayAvatarURL(),
       })
       .setTimestamp()
