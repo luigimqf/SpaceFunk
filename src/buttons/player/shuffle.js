@@ -54,9 +54,7 @@ async function action({ interaction, client, reply, rows }) {
     .setTimestamp()
     .toJSON();
 
-  reply.edit({ embeds: [embed], components: rows });
-
-  return interaction.deferUpdate();
+  return interaction.update({ embeds: [embed], components: rows });
 }
 const button = new ButtonBuilder()
   .setCustomId("shuffle")

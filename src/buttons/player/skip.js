@@ -55,9 +55,8 @@ async function action({ interaction, client, reply, rows }) {
     .setTimestamp()
     .toJSON();
 
-  reply.edit({ embeds: [embed], components: rows });
+  return interaction.update({ embeds: [embed], components: rows });
 
-  return interaction.deferUpdate();
 }
 
 const button = new ButtonBuilder()
