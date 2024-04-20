@@ -1,7 +1,7 @@
 const { ButtonBuilder, ButtonStyle, EmbedBuilder } = require("discord.js");
 const { useQueue } = require("discord-player");
 
-async function action({ interaction, client, rows }) {
+async function action({ interaction, client }) {
   const queue = useQueue(interaction.guild);
 
   if (!queue || !queue.isPlaying()) {
@@ -54,7 +54,7 @@ async function action({ interaction, client, rows }) {
     .setTimestamp()
     .toJSON();
 
-  return interaction.update({ embeds: [embed], components: rows });
+  return interaction.update({ embeds: [embed]});
 
 }
 const button = new ButtonBuilder()
