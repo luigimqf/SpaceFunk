@@ -3,7 +3,7 @@ const { EmbedBuilder } = require("discord.js");
 
 const data = {
   name: "previous",
-  description: "Volta para a música anterior",
+  description: "Go back to the previous music!",
 }
 
 async function run({ interaction, client }) {

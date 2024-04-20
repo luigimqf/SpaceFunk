@@ -3,10 +3,10 @@ const { EmbedBuilder, ApplicationCommandOptionType } = require("discord.js");
 
 const data = {
   name: "remove",
-  description: "Remove music from the queue!",
+  description: "Remove a specific music from the queue!",
   options: [
     {
-      name: "song",
+      name: "query",
       description: "The name/URL of the song to remove",
       type: ApplicationCommandOptionType.String,
       required: false,
@@ -28,7 +28,7 @@ async function run({ interaction, client }) {
     return interaction.reply({content: "I'm not playing anything!", ephemeral: true });
   }
 
-  const track = interaction.options.getString("song");
+  const track = interaction.options.getString("query");
   const number = interaction.options.getNumber("number");
 
   if (!track && !number)
