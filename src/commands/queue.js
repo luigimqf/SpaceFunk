@@ -6,7 +6,7 @@ const createQueueButton = require("../utils/createQueueButtons");
 
 const data = {
   name: "queue",
-  description: "Show music queue!",
+  description: "Shows musics in queue!",
 };
 
 async function run({ interaction, client }) {

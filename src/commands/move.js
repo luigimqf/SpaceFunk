@@ -6,13 +6,13 @@ const data = {
   description: "Move a song in the queue to a new position!",
   options: [
     {
-      name: "song",
+      name: "current-position",
       description: "Music number in the queue to move",
       type: ApplicationCommandOptionType.Number,
       required: true,
     },
     {
-      name: "position",
+      name: "new-position",
       description: "New position in the queue for the music",
       type: ApplicationCommandOptionType.Number,
       required: true,
@@ -33,7 +33,7 @@ async function run({ interaction, client }) {
       epheremal: true,
     });
 
-  const song = queue.tracks.toArray()[interaction.options.getNumber("song") - 1];
+  const song = queue.tracks.toArray()[interaction.options.getNumber("current-position") - 1];
 
   if (!song)
     return interaction.reply({
@@ -41,7 +41,7 @@ async function run({ interaction, client }) {
       epheremal: true,
     });
 
-  const newPosition = interaction.options.getNumber("position");
+  const newPosition = interaction.options.getNumber("new-position");
 
   if (newPosition < 1 || newPosition > queue.tracks.length)
     return interaction.reply({

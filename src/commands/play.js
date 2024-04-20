@@ -7,7 +7,7 @@ const {
 
 const data = {
   name: "play",
-  description: "Play a song!",
+  description: "Play music from URL or search query",
   options: [
     {
       name: "query",
@@ -25,7 +25,7 @@ async function run({ interaction, client }) {
 
   if (!channel) return interaction.reply({content: "Try joining a voice channel first!", ephemeral: true});
 
-  const query = interaction.options.getString("url", true);
+  const query = interaction.options.getString("query", true);
 
   const embed = new EmbedBuilder()
     .setAuthor({ name: "Loading music(s)..." })

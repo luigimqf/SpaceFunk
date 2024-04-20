@@ -10,7 +10,7 @@ const choices = [
 
 const data = {
   name: "loop",
-  description: "Enable or disable loop!",
+  description: "Set loop mode in queue, track, autoplay or off!",
 };
 
 async function run({ interaction }) {
