@@ -68,7 +68,7 @@ async function run({ interaction, client }) {
 
     if (!button) return i.reply({ content: "Button not implemented!", ephemeral: true });
 
-    await button.action({ interaction: i,client, reply, rows});
+    await button.action({ interaction: i,client });
   });
 
 }
