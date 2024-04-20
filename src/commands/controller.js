@@ -27,8 +27,6 @@ async function run({ interaction, client }) {
 
   const row = new ActionRowBuilder().addComponents(components);
 
-  const queue = useQueue(interaction.guildId);
-
   const reply = await interaction.reply({
     content: "Controller",
     components: [row],

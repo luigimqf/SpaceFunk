@@ -2,13 +2,13 @@ const { EmbedBuilder } = require("@discordjs/builders");
 
 const data = {
   name: "serverinfo",
-  description: "Mostra informações do servidor!",
+  description: "Shows information about the server!",
 };
 
 async function run({ interaction, client }) {
-  if(!interaction.guild){
+  if (!interaction.guild) {
     return interaction.reply({
-      content: "Você não está em um servidor!",
+      content: "You can only use this command in a server!",
       ephemeral: true,
     });
   }
@@ -16,19 +16,45 @@ async function run({ interaction, client }) {
   const { guild } = interaction;
 
   const serverInfoEmbed = new EmbedBuilder({
-    author: {name: guild.name, iconURL: guild.iconURL({size: 4096})},
-    fields:[
-      {name: "Dono", value: (await guild.fetchOwner()).user.tag, inline: true},
-      {name: "Canais de texto", value: guild.channels.cache.filter(channel => channel.type === 0).toJSON().length, inline: true},
-      {name: "Canais de voz", value: guild.channels.cache.filter(channel => channel.type === 2).toJSON().length, inline: true},
-      {name: "Canais de categoria", value: guild.channels.cache.filter(channel => channel.type === 4).toJSON().length, inline: true},
-      {name: "Membros", value: guild.memberCount, inline: true},
-      {name: "Cargos", value: guild.roles.cache.size, inline: true},
+    author: { name: guild.name, iconURL: guild.iconURL({ size: 4096 }) },
+    fields: [
+      {
+        name: "Owner",
+        value: (await guild.fetchOwner()).user.tag,
+        inline: true,
+      },
+      {
+        name: "Text channels",
+        value: guild.channels.cache
+          .filter((channel) => channel.type === 0)
+          .toJSON().length,
+        inline: true,
+      },
+      {
+        name: "Voice channels",
+        value: guild.channels.cache
+          .filter((channel) => channel.type === 2)
+          .toJSON().length,
+        inline: true,
+      },
+      {
+        name: "Category channels",
+        value: guild.channels.cache
+          .filter((channel) => channel.type === 4)
+          .toJSON().length,
+        inline: true,
+      },
+      { name: "Members", value: guild.memberCount, inline: true },
+      { name: "Roles", value: guild.roles.cache.size, inline: true },
     ],
-    footer: {text: `Comando executado por ${interaction.user.tag} | Criado em: ${guild.createdAt.toLocaleDateString()}}`},
+    footer: {
+      text: `Command executed by ${
+        interaction.user.tag
+      } | Created at: ${guild.createdAt.toLocaleDateString()}}`,
+    },
   });
 
-  await interaction.reply({embeds: [serverInfoEmbed]});
+  await interaction.reply({ embeds: [serverInfoEmbed] });
 }
 
 module.exports = { data, run };

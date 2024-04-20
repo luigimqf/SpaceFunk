@@ -1,5 +1,5 @@
-const { useQueue } = require("discord-player");
 const { ButtonBuilder, ButtonStyle, EmbedBuilder } = require("discord.js");
+const { useQueue } = require("discord-player");
 
 async function action({ interaction, client, reply, rows }) {
   const queue = useQueue(interaction.guild);
@@ -11,19 +11,18 @@ async function action({ interaction, client, reply, rows }) {
     });
   }
 
-  const nextTrack = queue.tracks.toArray()[0];
-
-  if (!nextTrack)
+  if (!queue.history.previousTrack)
     return interaction.reply({
-      content: "There's no music in the queue",
+      content: "There's no music history",
       ephemeral: true,
     });
 
-  queue.node.skip();
+  const nextCurrentTrack = queue.history.tracks.data[0];
+
+  queue.history.back();
 
   const copiedQueue = { ...queue };
-  const copiedTracks = [...copiedQueue.tracks.toArray()];
-  const nextCurrentTrack = copiedTracks.shift();
+  const copiedTracks = [queue.currentTrack, ...copiedQueue.tracks.toArray()];
 
   const tracks = copiedTracks.map(
     (track, index) =>
@@ -33,9 +32,9 @@ async function action({ interaction, client, reply, rows }) {
   );
 
   const nextSongs =
-    copiedQueue.tracks.size > 10
-      ? `and **${copiedQueue.tracks.size - 1 - 10}** music(s)...`
-      : `**${copiedQueue.tracks.size - 1}** in playlist...`;
+    copiedTracks.length > 10
+      ? `and **${copiedTracks.length - 10}** music(s)...`
+      : `**${copiedTracks.length}** in playlist...`;
 
   const embed = new EmbedBuilder()
     .setColor("#8e44ad")
@@ -59,11 +58,10 @@ async function action({ interaction, client, reply, rows }) {
 
   return interaction.deferUpdate();
 }
-
 const button = new ButtonBuilder()
-  .setCustomId("skip")
-  .setLabel("Skip")
+  .setCustomId("previous")
+  .setLabel("Previous")
   .setStyle(ButtonStyle.Primary)
-  .setEmoji("1230581263983837254");
+  .setEmoji("1230581278366236693")
 
-module.exports = { action, button, key: "skip" };
+module.exports = { action, button, key: "previous" };
