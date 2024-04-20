@@ -1,7 +1,7 @@
 const { ButtonBuilder, ButtonStyle } = require("discord.js");
 const { useQueue } = require("discord-player");
 
-async function action({ interaction, client, reply, rows }) {
+async function action({ interaction }) {
   const queue = useQueue(interaction.guild);
 
   if (!queue || !queue.isPlaying()) {
