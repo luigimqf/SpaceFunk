@@ -3,7 +3,7 @@ name: Deploy WorkFlow Trigger
 on:
   push:
     branches:
-    - feat/kubernetes-deployment
+    - main
 
 jobs:
   build:
