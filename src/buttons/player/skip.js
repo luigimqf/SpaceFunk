@@ -1,5 +1,7 @@
 const { useQueue } = require("discord-player");
 const { ButtonBuilder, ButtonStyle, EmbedBuilder } = require("discord.js");
+const durationToSeconds = require("../../utils/durationToSeconds");
+const secondsToTimerString = require("../../utils/secondsToTimerString");
 
 async function action({ interaction, client }) {
   const queue = useQueue(interaction.guild);
@@ -37,6 +39,12 @@ async function action({ interaction, client }) {
       ? `and **${copiedQueue.tracks.size - 1 - 10}** music(s)...`
       : `**${copiedQueue.tracks.size - 1}** in playlist...`;
 
+  const queueDurationInSeconds = copiedQueue.tracks.toArray().reduce(
+        (acc, track) => acc + durationToSeconds(track.duration),
+        0
+      );
+  const formatedQueueDuration = secondsToTimerString(queueDurationInSeconds);
+
   const embed = new EmbedBuilder()
     .setColor("#8e44ad")
     .setAuthor({
@@ -44,9 +52,9 @@ async function action({ interaction, client }) {
       iconURL: client.user.displayAvatarURL({ size: 1024, dynamic: true }),
     })
     .setDescription(
-      `▶️ Playing: **[${nextCurrentTrack.title}](${
+      `▶️ Playing: **[${nextCurrentTrack.title}](${nextCurrentTrack.url}) | [${nextCurrentTrack.author}](${
         nextCurrentTrack.url
-      })**\n\n${tracks.slice(0, 10).join("\n")}\n\n${nextSongs}`
+      })** - \`${nextCurrentTrack.duration}\` - \`${nextCurrentTrack.requestedBy.username}\`\n\n${tracks.slice(0, 10).join("\n")}\n\n\`${formatedQueueDuration}\`\n\n${nextSongs}`
     )
     .setFooter({
       text: `Command executed by ${interaction.user.tag}`,

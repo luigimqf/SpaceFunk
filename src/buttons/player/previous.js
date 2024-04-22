@@ -1,5 +1,7 @@
 const { ButtonBuilder, ButtonStyle, EmbedBuilder } = require("discord.js");
 const { useQueue } = require("discord-player");
+const durationToSeconds = require("../../utils/durationToSeconds");
+const secondsToTimerString = require("../../utils/secondsToTimerString");
 
 async function action({ interaction, client }) {
   const queue = useQueue(interaction.guild);
@@ -36,6 +38,12 @@ async function action({ interaction, client }) {
       ? `and **${copiedTracks.length - 10}** music(s)...`
       : `**${copiedTracks.length}** in playlist...`;
 
+  const queueDurationInSeconds = copiedTracks.reduce(
+    (acc, track) => acc + durationToSeconds(track.duration),
+    durationToSeconds(nextCurrentTrack.duration)
+  );
+  const formatedQueueDuration = secondsToTimerString(queueDurationInSeconds);
+
   const embed = new EmbedBuilder()
     .setColor("#8e44ad")
     .setAuthor({
@@ -43,9 +51,9 @@ async function action({ interaction, client }) {
       iconURL: client.user.displayAvatarURL({ size: 1024, dynamic: true }),
     })
     .setDescription(
-      `▶️ Playing: **[${nextCurrentTrack.title}](${
+      `▶️ Playing: **[${nextCurrentTrack.title}](${nextCurrentTrack.url}) | [${nextCurrentTrack.author}](${
         nextCurrentTrack.url
-      })**\n\n${tracks.slice(0, 10).join("\n")}\n\n${nextSongs}`
+      })** - \`${nextCurrentTrack.duration}\` - \`${nextCurrentTrack.requestedBy.username}\`\n\n${tracks.slice(0, 10).join("\n")}\n\n\`${formatedQueueDuration}\`\n\n${nextSongs}`
     )
     .setFooter({
       text: `Command executed by ${interaction.user.tag}`,
@@ -54,13 +62,12 @@ async function action({ interaction, client }) {
     .setTimestamp()
     .toJSON();
 
-  return interaction.update({ embeds: [embed]});
-
+  return interaction.update({ embeds: [embed] });
 }
 const button = new ButtonBuilder()
   .setCustomId("previous")
   .setLabel("Previous")
   .setStyle(ButtonStyle.Primary)
-  .setEmoji("1230581278366236693")
+  .setEmoji("1230581278366236693");
 
 module.exports = { action, button, key: "previous" };
