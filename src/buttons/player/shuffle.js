@@ -43,9 +43,9 @@ async function action({ interaction, client }) {
       iconURL: client.user.displayAvatarURL({ size: 1024, dynamic: true }),
     })
     .setDescription(
-      `▶️ Playing: **[${queue.currentTrack.title}](${
+      `▶️ Playing: **[${queue.currentTrack.title}](${queue.currentTrack.url}) | [${queue.currentTrack.author}](${
         queue.currentTrack.url
-      })**\n\n${tracks.slice(0, 10).join("\n")}\n\n${nextSongs}`
+      })** - \`${queue.currentTrack.duration}\` - \`${queue.currentTrack.requestedBy.username}\`\n\n${tracks.slice(0, 10).join("\n")}\n\n${nextSongs}`
     )
     .setFooter({
       text: `Command executed by ${interaction.user.tag}`,
