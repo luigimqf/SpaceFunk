@@ -19,7 +19,7 @@ client.config = require('./config')
 
 const player = new Player(client, client.config.opt.discordPlayer);
 
-player.extractors.loadDefault();
+player.extractors.loadDefault((ext) => ext !== 'YouTubeExtractor');
 
 new CommandKit({
   client,
