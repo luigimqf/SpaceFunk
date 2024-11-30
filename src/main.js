@@ -2,6 +2,7 @@ const { Client, GatewayIntentBits } = require("discord.js");
 const { CommandKit } = require("commandkit");
 const path = require("path");
 const dotenv = require("dotenv");
+const { YoutubeiExtractor } = require("discord-player-youtubei")
 const { Player } = require("discord-player");
 
 dotenv.config();
@@ -19,7 +20,9 @@ client.config = require('./config')
 
 const player = new Player(client, client.config.opt.discordPlayer);
 
-player.extractors.loadDefault((ext) => ext !== 'YouTubeExtractor');
+player.extractors.register(YoutubeiExtractor, {});
+
+player.extractors.loadDefault();
 
 new CommandKit({
   client,
