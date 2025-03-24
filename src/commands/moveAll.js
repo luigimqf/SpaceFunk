@@ -35,6 +35,7 @@ async function run({ interaction, client }) {
 
   for(const member of members.values()) {
     await member.voice.setChannel(newChannel);
+    console.log(`Moved ${member.user.tag} to ${newChannel.name}`);	
   }
 
   interaction.reply({ content: "Moved all users", ephemeral: true });
