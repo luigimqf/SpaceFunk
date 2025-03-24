@@ -30,7 +30,6 @@ async function run({ interaction, client }) {
 
   const members = currentChannel.members.filter(member => !member.user.bot);
   if(!members.size) {
-    console.log("No users to move");
     return interaction.reply({ content: "No users to move", ephemeral: true });
   }
 
